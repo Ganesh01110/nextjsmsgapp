@@ -47,9 +47,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks:{
-    async session({ session,  token }) {
-      return session
-    },
     async jwt({ token, user }) {
       if(user){
         token._id = user._id?.toString();
@@ -59,7 +56,15 @@ export const authOptions: NextAuthOptions = {
       }
 
       return token
-    }
+    },
+    async session({ session,  token }) {
+      if(token){
+        session.user._id = token._id
+      }
+
+      return session
+    },
+   
   },
   pages:{
     signIn: '/sign-in'

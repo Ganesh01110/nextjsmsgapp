@@ -1,4 +1,5 @@
 import 'next-auth'
+import { DefaultSession } from 'next-auth';
 // declare file to declare or modify
 
 declare module 'next-auth' {
@@ -7,5 +8,14 @@ declare module 'next-auth' {
         isVerified?:boolean;
         isAcceptingMessages?:boolean;
         username?:string
+    }
+
+    interface Session{
+        user:{
+            _id?:string;
+            isVerified?:boolean;
+            isAcceptingMessages?:boolean;
+            username?:string
+        } & DefaultSession['user']
     }
 }
