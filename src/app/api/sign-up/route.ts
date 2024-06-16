@@ -12,35 +12,33 @@ export async function POST(request:Request){
     //   case-1 if username exist finding by username
       const existingUserVeryfiedByUserName = await UserModel.findOne({
         username,
-        isVerified:true
+        isVerified:true,
       })
 
       if(existingUserVeryfiedByUserName ){
         return Response.json({
             success:false,
             message:"username is already taken",
-        },{status:400})
+        },{status:400});
       }
 
     //   case-2 finding username by email
-      const existingUserByemail = await UserModel.findOne({ 
-        email
-      })
+      const existingUserByemail = await UserModel.findOne({ email })
 
       const verifyCode = Math.floor(100000 + Math.random() * 900000).toString()
 
       if(existingUserByemail) {
           if(existingUserByemail.isVerified){
             return Response.json({
-              success:false,
+                success:false,
                 message:"user already exist with this email",
             },{status:400})
           }else{
-            const hashedPassword = await bcrypt.hash(password,10)
+            const hashedPassword = await bcrypt.hash(password, 10)
 
             existingUserByemail.password = hashedPassword 
             existingUserByemail.verifyCode = verifyCode
-            existingUserByemail.veryfyCodeExpiry = new Date(Date.now() + 3600000)
+            existingUserByemail.verifyCodeExpiry = new Date(Date.now() + 3600000)
             await existingUserByemail.save()
 
           }
@@ -52,12 +50,12 @@ export async function POST(request:Request){
          const newUser =  new UserModel({
             username,
             email,
-            password: hashedPassword ,
-            verifyCode,
-            verifyCodeExpire:expiryDate,
+            password: hashedPassword,
+            verifyCode ,
+            verifyCodeExpiry:expiryDate,
             isVerified:false,
             isAcceptingMessage:true,
-            messages: []
+            messages: [] ,
           })
 
           await newUser.save()
