@@ -12,14 +12,14 @@ verifyCode:string
         await resend.emails.send({
             from:'you@example.com',
             to: email,
-            subject:'mystry message | verification code',
-            react:VerificationEmail({username,otp:verifyCode}),
+            subject:'mystry message  verificationcode',
+            react:VerificationEmail({username , otp: verifyCode}),
        
         });
         return{success:true, message:'verification email sent successfully'}
 
     }catch(emailError){
-       console.log("error ddddduring seng email",emailError)
+       console.log("error ddddduring seng email:",emailError)
        return{success:false , message:'failed to send email'}
     }
 }
