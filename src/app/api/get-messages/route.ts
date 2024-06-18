@@ -26,7 +26,23 @@ export async function GET(request:Request){
       { $sort: { 'messages.createdAt': -1 } },
       { $group: { _id: '$_id', messages: { $push: '$messages' } } },
     ]).exec();
+        
+    if (!user || user.length === 0) {
+      return Response.json(
+        { message: 'User not found', success: false },
+        { status: 404 }
+      );
+    }
 
+    return Response.json(
+      {
+        success:true,
+        messages: user[0].messages 
+      },
+      {
+        status: 200,
+      }
+    );
 
   }catch(error){
     console.error('An unexpected error occurred:', error);
