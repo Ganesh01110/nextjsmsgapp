@@ -32,6 +32,17 @@ export async function POST(request: Request) {
         );
       }
 
+      const newMessage = { content, createdAt: new Date() };
+
+      // Push the new message to the user's messages array
+      user.messages.push(newMessage as Message);
+      await user.save();
+  
+      return Response.json(
+        { message: 'Message sent successfully', success: true },
+        { status: 201 }
+      );
+      
      }catch(error){
         console.error('Error adding message:', error);
         return Response.json(
