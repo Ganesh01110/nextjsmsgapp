@@ -9,3 +9,24 @@ const openai = new OpenAI({
 // setting run time as edge as next goes timebout
 export const runtime = 'edge';
 
+export async function POST(req: Request) { 
+    try {
+
+        
+
+    }catch(error){
+        if (error instanceof OpenAI.APIError) {
+            // OpenAI API error handling
+            const { name, status, headers, message } = error;
+            return NextResponse.json({ name, status, headers, message }, { status });
+          } 
+          
+        else {
+            // General error handling
+            console.error('An unexpected error occurred:', error);
+            throw error;
+          }
+
+    }
+}
+
