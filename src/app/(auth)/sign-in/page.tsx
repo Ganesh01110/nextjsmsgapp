@@ -21,6 +21,45 @@ import { signinSchema } from '@/schemas/signInSchema';
 
 export default function SignInForm() {
 
+    const router = useRouter();
+
+    const form = useForm<z.infer<typeof signinSchema>>({
+      resolver: zodResolver(signinSchema),
+      defaultValues: {
+        identifier: '',
+        password: '',
+      },
+    });
+  
+    const { toast } = useToast();
+    const onSubmit = async (data: z.infer<typeof signinSchema>) => {
+      const result = await signIn('credentials', {
+        redirect: false,
+        identifier: data.identifier,
+        password: data.password,
+      });
+  
+      if (result?.error) {
+        if (result.error === 'CredentialsSignin') {
+          toast({
+            title: 'Login Failed',
+            description: 'Incorrect username or password',
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Error',
+            description: result.error,
+            variant: 'destructive',
+          });
+        }
+      }
+  
+      if (result?.url) {
+        router.replace('/dashboard');
+      }
+    };
+
 
 return (
     <div className="flex justify-center items-center min-h-screen bg-gray-800">
