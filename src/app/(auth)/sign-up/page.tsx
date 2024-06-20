@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import * as z  from "zod"
 import Link from "next/link"
 import { useEffect, useState } from 'react';
-import { useDebounceValue } from 'usehooks-ts'
+import { useDebounceCallback } from 'usehooks-ts'
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { signupSchema } from '@/schemas/signUpSchemas';
@@ -24,7 +24,7 @@ const page = () => {
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const debouncedUsername = useDebounceValue(username, 300);
+  const debounced = useDebounceCallback(setUsername, 300);
 
   const router = useRouter();
   const { toast } = useToast();
@@ -41,13 +41,15 @@ const page = () => {
 
   useEffect(() =>{
     const checkUsernameUnique = async () => {
-      if (debouncedUsername) {
+      if (username) {
         setIsCheckingUsername(true)
         setUsernameMessage('')
         try {
           const response = await axios.get<ApiResponse>(
-            `/api/check-username-unique?username=${debouncedUsername}`
+            `/api/check-username-unique?username=${username}`
           );
+
+          console.log(response.data.message)
           setUsernameMessage(response.data.message);
         } catch (error) {
           const axiosError = error as AxiosError<ApiResponse>;
@@ -64,13 +66,14 @@ const page = () => {
     }
 
     checkUsernameUnique();
-  },[debouncedUsername])
+  },[username])
 
 
   const onSubmit = async (data: z.infer<typeof signupSchema>) => {
     setIsSubmitting(true);
     try {
       const response = await axios.post<ApiResponse>('/api/sign-up', data);
+
 
       toast({
         title: 'Success',
@@ -121,7 +124,7 @@ const page = () => {
                     {...field}
                     onChange={(e) => {
                       field.onChange(e);
-                      setUsername(e.target.value);
+                      debounced(e.target.value);
                     }}
                   />
                   {isCheckingUsername && <Loader2 className="animate-spin" />}
