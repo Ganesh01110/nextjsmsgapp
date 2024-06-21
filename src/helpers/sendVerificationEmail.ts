@@ -10,7 +10,7 @@ verifyCode:string
 ):Promise<ApiResponse>{
     try{
         await resend.emails.send({
-            from:'you@example.com',
+            from:'Acme <verifycode@knightpg.com>',
             to: email,
             subject:'mystry message  verificationcode',
             react:VerificationEmail({username , otp: verifyCode}),
