@@ -66,7 +66,10 @@ This Next.js application allows users to send anonymous messages. It includes fe
    ```
 
 3. **Set up environment variables:**
-   - Create a `.env` file in the root of the project.
+   - Create a `.env` file in the root of the project  or copy from `.env.example` by following steps.
+    ```sh
+   cp .env.example .env
+   ```
    - Add the necessary environment variables such as database connection strings, API keys, and email service credentials.
 
 4. **Run the development server:**
